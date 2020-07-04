@@ -19,10 +19,10 @@ exports.singIn = async (req, res) => {
         delete user.password;
         res.status(200).send(user)
       } else {
-        res.status(200).send({ message: "Error while register book"})
+        res.status(400).send({ message: "Error while signIn"})
       }
     }).catch(()=> {
-      res.status(500).send({ message: "Error while register book" })
+      res.status(500).send({ message: "Error while signIn" })
     });
 }
 

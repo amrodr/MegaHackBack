@@ -16,11 +16,11 @@ exports.getBooks = async (req, res) => {
 
     const formatBooks = _.chain(books)
       .groupBy("gender._id")
-      .map((value, key) => ({ gender: key.name, books: value }))
+      .map((value, key) => ({ category: key.name, books: value }))
       .value();
 
     for (const book of formatBooks) {
-      book.gender = book.books[0].gender.name;
+      book.category = book.books[0].gender.name;
     }
 
     res.status(200).send(formatBooks)
