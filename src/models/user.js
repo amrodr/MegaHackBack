@@ -28,7 +28,8 @@ const schema = new Schema({
       favorite: {
         type: Boolean,
         default: false
-      }
+      },
+      chapterIndex: [Number]
     }]
 })
 

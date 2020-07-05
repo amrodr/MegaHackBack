@@ -55,39 +55,70 @@ exports.getFilteredBooks = async (req, res) => {
 }
 
 exports.getChapterByBook = async (req, res) => {
-    await repository.getById(req.params.bookId)
-        .then(book => {
-            book.chapter = book.chapters[req.params.chapterId];
+    const book = await repository.getById(req.params.bookId);
+    book.chapter = book.chapters[req.params.chapterId];
 
-            book.chapter.readingUsers = [{
-                userPicture: 'user-2.png',
-                name: 'Laura'
-            }, {
-                userPicture: 'user-3.png',
-                name: 'Pedro'
-            }, {
-                userPicture: 'user-4.png',
-                name: 'Antonio'
-            }, {
-                userPicture: 'user-6.png',
-                name: 'Luis'
-            }];
+    if (!book.chapter) {
+        res.status(404).send(book);
+        return;
+    }
 
-            res.status(200).send(book);
-        });
+    const user = await User.getUser({ _id: '5efff5e5119b2c438a7feed1' });
+
+    book.chapter.readingUsers = [{
+        userPicture: 'user-2.png',
+        name: 'Laura'
+    }, {
+        userPicture: 'user-3.png',
+        name: 'Pedro'
+    }, {
+        userPicture: 'user-4.png',
+        name: 'Antonio'
+    }, {
+        userPicture: 'user-6.png',
+        name: 'Luis'
+    }];
+
+    if (req.params.chapterId > 0) {
+        for (const reading of user.currentReadings) {
+            if (String(reading.book) !== String(req.params.bookId)) {
+                continue;
+            }
+
+            reading.chapterIndex = reading.chapterIndex || [];
+            if (reading.chapterIndex.includes(req.params.chapterId)) {
+                continue;
+            }
+
+            if (!reading.chapterIndex.includes(req.params.chapterId - 1)) {
+                reading.chapterIndex.push(req.params.chapterId - 1);
+            }
+
+            reading.readingProgress = ((100 / book.chapters.length) * req.params.chapterId);
+            break;
+        }
+    
+        await User.update(user);
+    }
+
+    res.status(200).send(book);
 }
 
 exports.patchChapterByBookDialog = async (req, res) => {
     const book = await repository.getById(req.params.bookId);
     book.chapter = book.chapters[req.params.chapterId];
 
+    const user = await User.getUser({ _id: '5efff5e5119b2c438a7feed1' });
+
     if (book.chapter.dialog && book.chapter.dialog.answers) {
         const answer = book.chapter.dialog.answers.find(element => String(element.alternative.replace('?', '')) === String(req.params.answer));
 
         if (answer && answer.correct && book.chapter.dialog.points) {
-            await User.updateScore('5efff5e5119b2c438a7feed1', book.chapter.dialog.points);
+            user.score += Number(book.chapter.dialog.points);
         }
     }
+
+    await User.update(user);
 
     res.status(200).json({ message: 'Resposata salva!' });
 }
