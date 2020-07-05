@@ -14,6 +14,8 @@ const schema = new Schema({
       type: Number,
       default: 0
     },
+    name: String,
+    photo: String,
     currentReadings: [{
       book: {
         type: Schema.Types.ObjectId,

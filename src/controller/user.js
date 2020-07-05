@@ -6,6 +6,19 @@ const levelProgress = (user) => {
 
     user.levelProgress = data > 0 ? Number(String(data).split('.')[1]) : data;
     user.level = data > 0 ? Number(String(data).split('.')[0]) : data;
+    user.rank = 'Apprendice';
+
+    if (user.score < 50) {
+        user.rank = 'Apprendice';
+    }
+
+    if (user.score >= 50 && user.score < 100) {
+        user.rank = 'Reader';
+    }
+
+    if (user.score >= 100) {
+        user.rank = 'Leader';
+    }
 
     return user;
 }
@@ -43,6 +56,33 @@ exports.get = async (req, res) => {
     const user = await repository.get(filter);
 
     res.status(200).json(levelProgress(user));
+}
+
+exports.getRank = async (req, res) => {
+    let filter = {
+        _id: '5efff5e5119b2c438a7feed1'
+    }
+
+    const userResponse = levelProgress(await repository.get(filter));
+    var usersResponse = await repository.rankUsers();
+
+    res.status(200).json({
+        user: {
+            photo: userResponse.photo,
+            name: userResponse.name,
+            score: userResponse.score,
+            rank: userResponse.rank
+        },
+        users: usersResponse.map(element => {
+            const user = levelProgress(element);
+            return {
+                photo: user.photo,
+                name: user.name,
+                score: user.score,
+                rank: user.rank
+            };
+        })
+    });
 }
 
 exports.startReading = async (req, res) => {

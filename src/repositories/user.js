@@ -29,3 +29,10 @@ exports.updateScore = async (userId, score) => {
   return await User.updateOne({ _id: userId }, { $inc: { score } });
 }
 
+exports.rankUsers = async () => {
+  return await User.find({})
+    .select('photo name score')
+    .sort({ score: -1 })
+    .limit(10);
+}
+
