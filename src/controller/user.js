@@ -33,6 +33,10 @@ exports.get = async (req, res) => {
 
     const user = await repository.get(filter);
 
+    const data = user.score < 50 ? 0 : user.score / 50
+    user.levelProgress = Number(String(data).split('.')[1]);
+    user.level = Number(String(data).split('.')[0]);
+
     res.status(200).json(user);
 }
 
