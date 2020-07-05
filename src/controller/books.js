@@ -60,16 +60,16 @@ exports.getChapterByBook = async (req, res) => {
             book.chapter = book.chapters[req.params.chapterId];
 
             book.chapter.readingUsers = [{
-                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                userPicture: 'user-2.png',
                 name: 'Laura'
             }, {
-                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                userPicture: 'user-3.png',
                 name: 'Pedro'
             }, {
-                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                userPicture: 'user-4.png',
                 name: 'Antonio'
             }, {
-                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                userPicture: 'user-6.png',
                 name: 'Luis'
             }];
 
