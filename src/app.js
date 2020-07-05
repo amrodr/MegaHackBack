@@ -15,11 +15,10 @@ app.use(cors({
     allowHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
-
 app.use(bodyParser.json({}));
 app.use(bodyParser.urlencoded({limit: '500mb', extended: false }));
 
-app.use('/book', bookRoute);
+app.use('/books', bookRoute);
 app.use('/user', userRoute);
 
 module.exports = app;
