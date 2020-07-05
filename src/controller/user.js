@@ -1,6 +1,15 @@
 'use strict'
 const repository = require('../repositories/user');
 
+const levelProgress = (user) => {
+    const data = user.score < 50 ? 0 : user.score / 50
+
+    user.levelProgress = data > 0 ? Number(String(data).split('.')[1]) : data;
+    user.level = data > 0 ? Number(String(data).split('.')[0]) : data;
+
+    return user;
+}
+
 exports.singIn = async (req, res) => {
     let filter = {};
     const username = req.body.username;
@@ -33,11 +42,7 @@ exports.get = async (req, res) => {
 
     const user = await repository.get(filter);
 
-    const data = user.score < 50 ? 0 : user.score / 50
-    user.levelProgress = Number(String(data).split('.')[1]);
-    user.level = Number(String(data).split('.')[0]);
-
-    res.status(200).json(user);
+    res.status(200).json(levelProgress(user));
 }
 
 exports.startReading = async (req, res) => {
