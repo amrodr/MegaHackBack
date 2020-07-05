@@ -53,6 +53,15 @@ exports.getFilteredBooks = async (req, res) => {
     res.status(200).send(formatBooks)
 }
 
+exports.getChapterByBook = async (req, res) => {
+    await repository.getById(req.params.bookId)
+        .then(book => {
+            book.chapter = book.chapters[req.params.chapterId];
+
+            res.status(200).send(book)
+        });
+}
+
 exports.addComment = async (req, res) => {
     const bookId = req.params.id;
     const comment = req.body.comment;
