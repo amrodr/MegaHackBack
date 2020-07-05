@@ -33,7 +33,7 @@ exports.getBookById = async (req, res) => {
 exports.getFilteredBooks = async (req, res) => {
     const filter = {};
 
-    if (req.params.search) {
+    if (req.params.search && req.params.search !== 'all') {
         filter.name = new RegExp(req.params.search, 'i');
     }
 
