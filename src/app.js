@@ -3,8 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const bookRoute = require ('../src/routes/books');
-const userRoute = require ('../src/routes/user');
+const bookRoute = require('../src/routes/books');
+const userRoute = require('../src/routes/user');
 
 app.use(cors({
     origin: '*',

@@ -1,6 +1,5 @@
 'use strict'
 
-const mongoose = require('mongoose');
 const User = require('../models/user');
 const Book = require('../models/books');
 
@@ -24,5 +23,9 @@ exports.registerReadStartRecord = async (userId, readingBook) => {
 
 exports.favoriteBook = async (userId, readingBook) => {
   return await User.updateOne({ _id: userId }, { $set: { currentReadings: readingBook } })
+}
+
+exports.updateScore = async (userId, score) => {
+  return await User.updateOne({ _id: userId }, { $inc: { score } });
 }
 

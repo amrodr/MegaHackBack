@@ -10,6 +10,10 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+    score: {
+      type: Number,
+      default: 0
+    },
     currentReadings: [{
       book: {
         type: Schema.Types.ObjectId,

@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const repository = require('../repositories/book');
+const User = require('../repositories/user');
 const _ = require('lodash');
 
 exports.getBooks = async (req, res) => {
@@ -58,8 +59,37 @@ exports.getChapterByBook = async (req, res) => {
         .then(book => {
             book.chapter = book.chapters[req.params.chapterId];
 
-            res.status(200).send(book)
+            book.chapter.readingUsers = [{
+                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                name: 'Laura'
+            }, {
+                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                name: 'Pedro'
+            }, {
+                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                name: 'Antonio'
+            }, {
+                userPicture: 'https://w7.pngwing.com/pngs/99/998/png-transparent-computer-icons-user-profile-50-face-heroes-monochrome.png',
+                name: 'Luis'
+            }];
+
+            res.status(200).send(book);
         });
+}
+
+exports.patchChapterByBookDialog = async (req, res) => {
+    const book = await repository.getById(req.params.bookId);
+    book.chapter = book.chapters[req.params.chapterId];
+
+    if (book.chapter.dialog && book.chapter.dialog.answers) {
+        const answer = book.chapter.dialog.answers.find(element => String(element.alternative.replace('?', '')) === String(req.params.answer));
+
+        if (answer && answer.correct && book.chapter.dialog.points) {
+            await User.updateScore('5efff5e5119b2c438a7feed1', book.chapter.dialog.points);
+        }
+    }
+
+    res.status(200).json({ message: 'Resposata salva!' });
 }
 
 exports.addComment = async (req, res) => {
