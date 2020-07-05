@@ -45,8 +45,11 @@ exports.getBooks = async (req, res) => {
 }
 
 exports.getBookById = async (req, res) => {
-    await repository.getById()
-        .then(book => (res.status(200).send(book)))
+    await repository.getById(req.params.bookId)
+        .then(book => {
+            book.gender = book.gender.name;
+            res.status(200).send(book)
+        });
 }
 
 exports.addComment = async (req, res) => {

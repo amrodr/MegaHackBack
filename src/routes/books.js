@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', books.getBooks);
 // router.get('/:name?', books.getBooks);
-router.get('/:id', books.getBookById);
+router.get('/:bookId', books.getBookById);
 router.post('/', books.registerBook);
 router.patch('/comment/:id', books.addComment);
 

@@ -13,7 +13,11 @@ exports.get = async (filter) => {
 }
 
 exports.getById = (bookId) => {
-    return Book.findById(bookId);
+  return Book.findById(bookId)
+      .populate('gender', {
+        name: 1
+      })
+      .lean();
 }
 
 exports.addComment = (bookId, comment) => {
