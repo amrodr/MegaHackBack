@@ -22,10 +22,19 @@ exports.getBooks = async (req, res) => {
     res.status(200).send(formatBooks)
 }
 
-exports.getBooks = async (req, res) => {
+exports.getBookById = async (req, res) => {
+    await repository.getById(req.params.bookId)
+        .then(book => {
+            book.gender = book.gender.name;
+            res.status(200).send(book)
+        });
+}
+
+exports.getFilteredBooks = async (req, res) => {
     const filter = {};
-    if (req.params.name) {
-        filter.name = new RegExp(req.params.name, 'i');
+
+    if (req.params.search) {
+        filter.name = new RegExp(req.params.search, 'i');
     }
 
     const books = await repository.get(filter).then(success => {
@@ -33,7 +42,7 @@ exports.getBooks = async (req, res) => {
     });
 
     const formatBooks = _.chain(books)
-        .groupBy("gender._id")
+        .groupBy('gender._id')
         .map((value, key) => ({ category: key.name, books: value }))
         .value();
 
@@ -42,14 +51,6 @@ exports.getBooks = async (req, res) => {
     }
 
     res.status(200).send(formatBooks)
-}
-
-exports.getBookById = async (req, res) => {
-    await repository.getById(req.params.bookId)
-        .then(book => {
-            book.gender = book.gender.name;
-            res.status(200).send(book)
-        });
 }
 
 exports.addComment = async (req, res) => {
