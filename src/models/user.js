@@ -22,6 +22,7 @@ const schema = new Schema({
             ref: 'Book',
             required: true
         },
+        feedback: String,
         readingProgress: {
             type: Number,
             default: 0

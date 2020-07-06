@@ -31,6 +31,27 @@ exports.getBookById = async (req, res) => {
         });
 }
 
+exports.getBooksFinalized = async (req, res) => {
+    const book = await repository.getById(req.params.bookId);
+
+    const user = await User.getUser({ _id: '5efff5e5119b2c438a7feed1' });
+    user.currentReadings = user.currentReadings || [];
+    const userBookIndex = user.currentReadings.findIndex(element => String(element.book) === String(req.params.bookId));
+
+    if (userBookIndex === -1) {
+        res.status(404).json({ message: 'Error' });
+    }
+
+    user.currentReadings[userBookIndex].chapterIndex = user.currentReadings[userBookIndex].chapterIndex || [];
+    user.currentReadings[userBookIndex].chapterIndex.push(book.chapters.length -1)
+    user.currentReadings[userBookIndex].readingProgress = 100;
+    user.currentReadings[userBookIndex].feedback = req.params.feedback;
+
+    await User.update(user);
+
+    res.status(200).json({ message: 'ok' });
+}
+
 exports.getFilteredBooks = async (req, res) => {
     const filter = {};
 
