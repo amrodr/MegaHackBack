@@ -58,12 +58,21 @@ exports.getChapterByBook = async (req, res) => {
     const book = await repository.getById(req.params.bookId);
     book.chapter = book.chapters[req.params.chapterId];
 
+    const user = await User.getUser({ _id: '5efff5e5119b2c438a7feed1' });
+    user.currentReadings = user.currentReadings || [];
+    const userBookIndex = user.currentReadings.findIndex(element => String(element.book) === String(req.params.bookId));
+    if (userBookIndex === -1) {
+        user.currentReadings.push({
+            book: req.params.bookId
+        });
+
+        await User.update(user);
+    }
+
     if (!book.chapter) {
         res.status(404).send(book);
         return;
     }
-
-    const user = await User.getUser({ _id: '5efff5e5119b2c438a7feed1' });
 
     book.chapter.readingUsers = [{
         userPicture: 'user-2.png',
@@ -112,6 +121,9 @@ exports.patchChapterByBookDialog = async (req, res) => {
 
     if (book.chapter.dialog && book.chapter.dialog.answers) {
         const answer = book.chapter.dialog.answers.find(element => String(element.alternative.replace('?', '')) === String(req.params.answer));
+        user.currentReadings = user.currentReadings || [];
+        const userBook = user.currentReadings.findIndex(element => String(element.book) === String(req.params.bookId));
+        userBook.chapterIndex = userBook.chapterIndex || [];
 
         if (answer && answer.correct && book.chapter.dialog.points) {
             user.score += Number(book.chapter.dialog.points);

@@ -11,25 +11,26 @@ const schema = new Schema({
         required: true,
     },
     score: {
-      type: Number,
-      default: 0
+        type: Number,
+        default: 0
     },
     name: String,
     photo: String,
     currentReadings: [{
-      book: {
-        type: Schema.Types.ObjectId,
-        ref: 'Book',
-        required: true
-      },
-      readingProgress: {
-        type: Number,
-      },
-      favorite: {
-        type: Boolean,
-        default: false
-      },
-      chapterIndex: [Number]
+        book: {
+            type: Schema.Types.ObjectId,
+            ref: 'Book',
+            required: true
+        },
+        readingProgress: {
+            type: Number,
+            default: 0
+        },
+        favorite: {
+            type: Boolean,
+            default: false
+        },
+        chapterIndex: [Number]
     }]
 })
 
