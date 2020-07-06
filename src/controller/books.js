@@ -42,6 +42,8 @@ exports.getBooksFinalized = async (req, res) => {
         res.status(404).json({ message: 'Error' });
     }
 
+    user.score = user.score || 0;
+    user.score += 50;
     user.currentReadings[userBookIndex].chapterIndex = user.currentReadings[userBookIndex].chapterIndex || [];
     user.currentReadings[userBookIndex].chapterIndex.push(book.chapters.length -1)
     user.currentReadings[userBookIndex].readingProgress = 100;
