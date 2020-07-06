@@ -121,9 +121,9 @@ exports.patchChapterByBookDialog = async (req, res) => {
 
     if (book.chapter.dialog && book.chapter.dialog.answers) {
         const answer = book.chapter.dialog.answers.find(element => String(element.alternative.replace('?', '')) === String(req.params.answer));
-        user.currentReadings = user.currentReadings || [];
-        const userBook = user.currentReadings.findIndex(element => String(element.book) === String(req.params.bookId));
-        userBook.chapterIndex = userBook.chapterIndex || [];
+        // user.currentReadings = user.currentReadings || [];
+        // const userBook = user.currentReadings.findIndex(element => String(element.book) === String(req.params.bookId));
+        // userBook.chapterIndex = userBook.chapterIndex || [];
 
         if (answer && answer.correct && book.chapter.dialog.points) {
             user.score += Number(book.chapter.dialog.points);
